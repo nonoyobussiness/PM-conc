@@ -109,5 +109,6 @@ PM2.5 is approximated by summing these.
 
 ### 🙆‍♂️ Contributors
 
-- **Sree Vathsal** — Project Lead, Data Pipeline
-- You can add your teammates here too.
+- **Sree Vathsal** 
+- **Hrishikesh Reddy**
+- **Tathya Sharma** 
