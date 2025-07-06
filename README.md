@@ -4,9 +4,10 @@
 
 This project aims to **predict surface-level PM2.5 concentrations across India** using:
 
-- 🚀 **Satellite-derived AOD**
-- 🌫️ **MERRA-2 aerosol reanalysis (BC, SO4, OC, Dust, Sea Salt)**
-- 🧠 **AI/ML Models**
+- 🚀 **Satellite-derived AOD** _(INSAT-3D/3DR/3DS - pending access)_
+- 🌫️ **MERRA-2 aerosol reanalysis** _(BC, SO4, OC, Dust, Sea Salt)_
+- 🌥️ **Meteorological variables** _(PBL Height, Temperature, RH, Wind, etc.)_
+- 🧠 **AI/ML Models** _(Random Forest, XGBoost, Imputation)_
 - 📍 **Ground truth from CPCB monitoring stations**
 
 It is part of our solution to the [ISRO Bhuvan Atmospheric Hackathon 2025](https://bhuvan-app1.nrsc.gov.in/isrohackathon2025/), focusing on **spatial pollution mapping** in areas with sparse sensors.
@@ -16,24 +17,29 @@ It is part of our solution to the [ISRO Bhuvan Atmospheric Hackathon 2025](https
 ### 📁 Project Structure
 
 ```
+
 PM-conc/
 │
 ├── datasets/
-│   ├── merra/              # Downloaded .nc4 files
-│   ├── cpcb/               # Ground-truth PM2.5 CSVs from CPCB
-│   └── merra-links.txt     # List of .nc4 URLs (NASA GES DISC)
+│   ├── cpcb/
+│   │   ├── PM2.5/             # Raw CPCB CSVs per city/year
+│   │   └── processed/         # ✅ Output after running preprocessing script
+│   │       └── cpcb_pm25_daily.csv  # ❗ Not versioned – generated locally
+│   ├── merra/                 # MERRA .nc4 files
+│   └── pblh/                  # (Planned) PBLH & Cloud Fraction datasets
 │
-├── outputs/
-│   └── merra/              # Extracted CSVs with PM2.5 estimates
+├── results/                   # Model outputs, metrics, plots
 │
 ├── src/
-│   ├── merra_extraction.py # Script to convert .nc4 to CSV
-│   ├── modeling.py         # (Planned) ML model training
-│   └── utils.py            # (Planned) Helper functions
+│   └── preprocessing/
+│       ├── cpcb-preprocessing.py   # Extracts daily PM2.5 from raw CPCB
+│       └── merra-extraction.py     # Converts .nc4 to PM2.5 CSVs
 │
-├── .venv/                  # Python virtual environment
-├── requirements.txt        # Required Python packages
-└── README.md               # You're reading it
+├── .venv/                     # Python virtual environment
+├── .gitignore
+├── requirements.txt
+└── README.md
+
 ```
 
 ---
@@ -70,44 +76,73 @@ wget --load-cookies ~/.urs_cookies --save-cookies ~/.urs_cookies --keep-session-
 #### 4. Run MERRA Extraction
 
 ```bash
-python src/merra_extraction.py
+python src/preprocessing/merra_extraction.py
 ```
 
-This will generate PM2.5 estimates for India in `outputs/merra/`.
+#### 5. Run CPCB Preprocessing
+
+```bash
+python src/preprocessing/cpcb_preprocessing.py
+```
+
+This will generate daily PM2.5 ground truth in `datasets/cpcb/processed/cpcb_pm25_daily.csv`.
 
 ---
 
 ### 📊 Features Used
 
-- **BCSMASS** - Black Carbon
-- **DUSMASS25** - Fine Dust Particles
-- **OCSMASS** - Organic Carbon
-- **SO4SMASS** - Sulfates
-- **SSSMASS25** - Sea Salt
+- **MERRA Variables**
 
-PM2.5 is approximated by summing these.
+  - `BCSMASS` - Black Carbon
+  - `DUSMASS25` - Dust
+  - `OCSMASS` - Organic Carbon
+  - `SO4SMASS` - Sulfates
+  - `SSSMASS25` - Sea Salt
+
+- **CPCB PM2.5** (target variable)
+- **Optional Features (from CPCB)**
+
+  - `AT (°C)`, `RH (%)`, `WS`, `BP`, `RF` → weather
+
+---
+
+### ✅ Progress Summary
+
+#### ✅ Done
+
+- Downloaded & preprocessed MERRA-2 `.nc4` files for 2019–2023
+- Extracted India-bounded PM2.5 approximation from MERRA
+- Fetched CPCB PM2.5 (city-wise) and cleaned to daily format
+- Structured data folder for modeling phase
+
+#### 🧠 In Progress
+
+- Merging MERRA & CPCB data by **date and nearest location**
+- Handling mismatches in date format and timezones
+
+#### 🧠 Planned Next
+
+- Impute missing AOD using MERRA met features
+- Train regression model (Random Forest / XGBoost)
+- Downscale MERRA spatial resolution (0.25° → \~5 km grid)
+- Visualize outputs using Folium or heatmap layers
 
 ---
 
 ### ⚠️ TODO
 
-- [x] Download and preprocess MERRA-2
-- [x] Extract India-only PM2.5 approximations
-- [ ] Integrate CPCB ground station data
-- [ ] Build ML regression model (XGBoost, LSTM, etc.)
-- [ ] Visualize spatial PM2.5 estimates (via Folium/Plotly)
-
----
+- ***
 
 ### 📌 References
 
 - [MERRA-2 Aerosol Dataset](https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/)
 - [GES DISC Access Guide](https://disc.gsfc.nasa.gov/)
 - [CPCB PM2.5 Data](https://app.cpcbccr.com/ccr/#/caaqm-dashboard/all-caaqm-data)
+- [ISRO Hackathon Portal](https://bhuvan-app1.nrsc.gov.in/isrohackathon2025/)
 
 ---
 
-### 🙆‍♂️ Contributors
+### 🦆‍♂️ Contributors
 
 - **Sree Vathsal**
 - **Hrishikesh Reddy**
