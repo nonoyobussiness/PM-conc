@@ -1,0 +1,16 @@
+# Ignore raw downloaded data
+datasets/merra/*.nc4
+
+# Ignore processed data (optional)
+datasets/merra-outputs-csv/*.csv
+
+# Ignore Python junk
+__pycache__/
+*.pyc
+
+# VSCode or editor configs (optional)
+.vscode/
+.idea/
+
+# Virtual environment
+.venv/

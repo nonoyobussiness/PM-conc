@@ -6,7 +6,7 @@ from pathlib import Path
 data_dir = Path("datasets/merra")
 
 # Where to save processed CSVs
-output_dir = Path("outputs/merra")
+output_dir = Path("datasets/merra-outputs-csv")
 output_dir.mkdir(parents=True, exist_ok=True)
 
 
