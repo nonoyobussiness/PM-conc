@@ -1,8 +1,8 @@
 # Ignore raw downloaded data
-datasets/merra/*.nc4
+datasets/merra/merra_unprocessed/*.nc4
 
 # Ignore processed data (optional)
-datasets/merra-outputs-csv/*.csv
+datasets/merra/merra_processed/*.csv
 
 # Ignore Python junk
 __pycache__/

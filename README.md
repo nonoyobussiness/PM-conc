@@ -64,7 +64,7 @@ Then run:
 ```bash
 wget --load-cookies ~/.urs_cookies --save-cookies ~/.urs_cookies --keep-session-cookies \
      --user YOUR_USERNAME --password YOUR_PASSWORD \
-     -i datasets/merra-links.txt -P datasets/merra/
+     -i datasets/merra/merra-links.txt -P datasets/merra/merra_unprocessed
 ```
 
 #### 4. Run MERRA Extraction
@@ -109,6 +109,6 @@ PM2.5 is approximated by summing these.
 
 ### 🙆‍♂️ Contributors
 
-- **Sree Vathsal** 
+- **Sree Vathsal**
 - **Hrishikesh Reddy**
-- **Tathya Sharma** 
+- **Tathya Sharma**

@@ -3,10 +3,10 @@ import pandas as pd
 from pathlib import Path
 
 # Where .nc4 files are (downloaded ones)
-data_dir = Path("datasets/merra")
+data_dir = Path("datasets/merra/merra_unprocessed")
 
 # Where to save processed CSVs
-output_dir = Path("datasets/merra-outputs-csv")
+output_dir = Path("datasets/merra/merra_processed")
 output_dir.mkdir(parents=True, exist_ok=True)
 
 
