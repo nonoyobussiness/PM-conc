@@ -17,29 +17,31 @@ It is part of our solution to the [ISRO Bhuvan Atmospheric Hackathon 2025](https
 ### 📁 Project Structure
 
 ```
-
 PM-conc/
 │
 ├── datasets/
 │   ├── cpcb/
 │   │   ├── PM2.5/             # Raw CPCB CSVs per city/year
+│   │   ├── city_coordinates.csv  # Lat/Lon for major cities
 │   │   └── processed/         # ✅ Output after running preprocessing script
 │   │       └── cpcb_pm25_daily.csv  # ❗ Not versioned – generated locally
-│   ├── merra/                 # MERRA .nc4 files
-│   └── pblh/                  # (Planned) PBLH & Cloud Fraction datasets
+│   ├── merra/
+│   │   ├── merra_unprocessed/ # Raw .nc4 files (not versioned)
+│   │   └── merra_processed/   # ✅ Output after running extraction script
+│   └── cpcb+merra_processed/  # ✅ Merged CPCB-MERRA (ignored in Git)
 │
 ├── results/                   # Model outputs, metrics, plots
 │
 ├── src/
 │   └── preprocessing/
-│       ├── cpcb-preprocessing.py   # Extracts daily PM2.5 from raw CPCB
-│       └── merra-extraction.py     # Converts .nc4 to PM2.5 CSVs
+│       ├── cpcb_preprocessing.py   # Extracts daily PM2.5 from raw CPCB
+│       ├── merra_extraction.py     # Converts .nc4 to PM2.5 CSVs
+│       └── merra+cpcb_merge.py     # Merges MERRA & CPCB features
 │
-├── .venv/                     # Python virtual environment
+├── .venv/                     # Python virtual environment (ignored)
 ├── .gitignore
 ├── requirements.txt
 └── README.md
-
 ```
 
 ---
@@ -85,7 +87,13 @@ python src/preprocessing/merra_extraction.py
 python src/preprocessing/cpcb_preprocessing.py
 ```
 
-This will generate daily PM2.5 ground truth in `datasets/cpcb/processed/cpcb_pm25_daily.csv`.
+#### 6. Merge MERRA & CPCB Data
+
+```bash
+python src/preprocessing/merra+cpcb_merge.py
+```
+
+This will generate `merged_model_input.csv` in `datasets/cpcb+merra_processed/`, which is **not committed to Git**.
 
 ---
 
@@ -100,6 +108,7 @@ This will generate daily PM2.5 ground truth in `datasets/cpcb/processed/cpcb_pm2
   - `SSSMASS25` - Sea Salt
 
 - **CPCB PM2.5** (target variable)
+
 - **Optional Features (from CPCB)**
 
   - `AT (°C)`, `RH (%)`, `WS`, `BP`, `RF` → weather
@@ -114,11 +123,12 @@ This will generate daily PM2.5 ground truth in `datasets/cpcb/processed/cpcb_pm2
 - Extracted India-bounded PM2.5 approximation from MERRA
 - Fetched CPCB PM2.5 (city-wise) and cleaned to daily format
 - Structured data folder for modeling phase
+- Merged CPCB and MERRA data with spatial and temporal matching
 
 #### 🧠 In Progress
 
-- Merging MERRA & CPCB data by **date and nearest location**
-- Handling mismatches in date format and timezones
+- Initial model training with merged features
+- Evaluation and cross-validation
 
 #### 🧠 Planned Next
 
@@ -131,7 +141,10 @@ This will generate daily PM2.5 ground truth in `datasets/cpcb/processed/cpcb_pm2
 
 ### ⚠️ TODO
 
-- ***
+- Build interactive dashboard for regional predictions
+- Add temporal smoothing or lag features
+
+---
 
 ### 📌 References
 

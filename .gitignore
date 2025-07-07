@@ -1,10 +1,11 @@
 # Ignore raw downloaded data
 datasets/merra/merra_unprocessed/*.nc4
 
-# Ignore processed data (optional)
+# processed data 
 datasets/merra/merra_processed/*.csv
-
+datasets/cpcb+merra_processed/merged_model_input_monthly.csv
 datasets/cpcb/processed/*.csv
+
 
 # Ignore Python junk
 __pycache__/
@@ -16,3 +17,6 @@ __pycache__/
 
 # Virtual environment
 .venv/
+
+#Test files
+src/preprocessing/test.py
